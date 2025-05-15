@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SqliteBookDao implements BookDao {
-    private final String URL = "jdbc:sqlite:/src/main/resources/books.db";
+    private final String URL = "jdbc:sqlite:src/main/resources/books.db";
 
     public void createBookTable() {
         try (Connection conn = DriverManager.getConnection(URL)) {
