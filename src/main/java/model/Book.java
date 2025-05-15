@@ -3,9 +3,11 @@ package model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
+@ToString
 public class Book {
     private final int id;
     private final String title;

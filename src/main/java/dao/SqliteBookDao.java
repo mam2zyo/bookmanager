@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SqliteBookDao implements BookDao {
-    private static final String URL = "jdbc:sqlite:/src/main/resources/books.db";
+    private final String URL = "jdbc:sqlite:/src/main/resources/books.db";
 
     public void createBookTable() {
         try (Connection conn = DriverManager.getConnection(URL)) {
@@ -31,17 +31,17 @@ public class SqliteBookDao implements BookDao {
         }
     }
 
-    public void insertBook(Book book) {
+    public void insertBook(String title, String author, double price, int quantity) {
         try (Connection conn = DriverManager.getConnection(URL)) {
 
             String sql = "INSERT INTO books(title, author, price, quantity) " +
                     "VALUES(?, ?, ?, ?)";
 
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, book.getTitle());
-                pstmt.setString(2, book.getAuthor());
-                pstmt.setDouble(3, book.getPrice());
-                pstmt.setInt(4, book.getQuantity());
+                pstmt.setString(1, title);
+                pstmt.setString(2, author);
+                pstmt.setDouble(3, price);
+                pstmt.setInt(4, quantity);
                 pstmt.executeUpdate();
             }
 
