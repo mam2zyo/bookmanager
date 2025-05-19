@@ -1,6 +1,11 @@
 package dao;
 
 import model.Book;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +36,7 @@ public class SqliteBookDao implements BookDao {
         }
     }
 
+    @Override
     public void insertBook(String title, String author, double price, int quantity) {
         try (Connection conn = DriverManager.getConnection(URL)) {
 
@@ -50,6 +56,45 @@ public class SqliteBookDao implements BookDao {
         }
     }
 
+    @Override
+    public void insertBook(String filename) {
+        List<String> books = parseBookCSV(filename);
+
+        for (String book : books) {
+            String[] data = book.split(",");
+            String title = data[0];
+            String author = data[1];
+            double price = Double.parseDouble(data[2]);
+            int quantity = Integer.parseInt(data[3]);
+
+            insertBook(title, author, price, quantity);
+        }
+    }
+
+    private List<String> parseBookCSV (String filename) {
+        List<String> books = new ArrayList<>();
+
+        try (FileReader fr = new FileReader(filename);
+             BufferedReader br = new BufferedReader(fr)) {
+
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                books.add(line);
+            }
+
+            books.remove(0); // header 제거
+
+        } catch (FileNotFoundException e) {
+            System.err.println(filename + " 파일을 찾을 수 없습니다.");
+        } catch (IOException e) {
+            System.err.println("파일 읽기 오류" + e.getMessage());
+            e.printStackTrace();
+        }
+        return books;
+    }
+
+
     public void deleteBook(int id) {
         try (Connection conn = DriverManager.getConnection(URL)) {
 
@@ -64,6 +109,8 @@ public class SqliteBookDao implements BookDao {
             e.printStackTrace();
         }
     }
+
+
 
     public void updateBookPrice(int id, double price) {
         try (Connection conn = DriverManager.getConnection(URL)) {

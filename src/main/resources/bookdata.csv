@@ -1,0 +1,21 @@
+title,author,price,quantity
+"PHP 500제","김태영",26000.0,3
+"Hello Coding 알고리즘","아디트야 바르가바",15000.0,2
+"Effective Java","Joshua Bloch",35000.0,5
+"Clean Code","Robert C. Martin",28000.0,4
+"자바의 정석","남궁성",27000.0,7
+"Python Crash Course","Eric Matthes",22000.0,6
+"Do it! 점프 투 파이썬","박응용",18000.0,9
+"리눅스 커맨드라인 완벽 입문","William Shotts",32000.0,2
+"HTTP 완벽 가이드","David Gourley",40000.0,3
+"Node.js 디자인 패턴","Mario Casciaro",33000.0,4
+"스프링 부트와 AWS","이일민",29000.0,5
+"오브젝트","조영호",31000.0,3
+"코딩 인터뷰 완전 분석","Gayle Laakmann McDowell",38000.0,2
+"알고리즘 문제 해결 전략","구종만",36000.0,4
+"데이터 과학을 위한 수학","조르주 폰트리",25000.0,3
+"머신러닝 파워드","Aurélien Géron",42000.0,2
+"클린 아키텍처","Robert C. Martin",34000.0,5
+"도메인 주도 설계","Eric Evans",37000.0,3
+"레거시 코드 활용 전략","Michael Feathers",26000.0,2
+"테스트 주도 개발","Kent Beck",23000.0,6

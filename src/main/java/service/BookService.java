@@ -23,19 +23,31 @@ public class BookService {
 
     public void addBook() {
 
-        System.out.print("제목: ");
-        String title = input.nextLine();
-        System.out.print("저자: ");
-        String author = input.nextLine();
-        System.out.print("가격: ");
-        double price = input.nextDouble();
-        input.nextLine();
-        System.out.print("수량: ");
-        int quantity = input.nextInt();
+        System.out.println("입력방법을 선택하세요.");
+        System.out.print("1. 직접 입력  | 2. csv 파일 입력 : ");
+
+        int choice = input.nextInt();
         input.nextLine();
 
-        dao.insertBook(title, author, price, quantity);
+        if (choice == 1) {
+            System.out.print("제목: ");
+            String title = input.nextLine();
+            System.out.print("저자: ");
+            String author = input.nextLine();
+            System.out.print("가격: ");
+            double price = input.nextDouble();
+            input.nextLine();
+            System.out.print("수량: ");
+            int quantity = input.nextInt();
+            input.nextLine();
 
+            dao.insertBook(title, author, price, quantity);
+        } else if (choice == 2) {
+            System.out.println("파일명을 경로와 함께 적어주세요: ");
+            String filename = input.nextLine();
+
+            dao.insertBook(filename);
+        }
     }
 
 
