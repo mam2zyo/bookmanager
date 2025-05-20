@@ -16,7 +16,6 @@ public class SqliteBookSearchDao implements BookSearchDao {
             String sql = "SELECT * FROM books WHERE id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
-            pstmt.executeUpdate();
             ResultSet rs = pstmt.executeQuery(sql);
 
             if (!rs.next()) {
@@ -51,7 +50,6 @@ public class SqliteBookSearchDao implements BookSearchDao {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, substring);
             pstmt.setString(2, substring);
-            pstmt.executeUpdate();
             ResultSet rs = pstmt.executeQuery(sql);
 
             while (rs.next()) {
@@ -81,7 +79,6 @@ public class SqliteBookSearchDao implements BookSearchDao {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setDouble(1, min);
             pstmt.setDouble(2, max);
-            pstmt.executeUpdate();
             ResultSet rs = pstmt.executeQuery(sql);
 
             while (rs.next()) {
@@ -110,7 +107,6 @@ public class SqliteBookSearchDao implements BookSearchDao {
             String sql = "SELECT * FROM books WHERE quantity <= ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, threshold);
-            pstmt.executeUpdate();
             ResultSet rs = pstmt.executeQuery(sql);
 
             while (rs.next()) {
