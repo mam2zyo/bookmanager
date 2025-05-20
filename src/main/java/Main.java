@@ -1,5 +1,7 @@
 import dao.BookDao;
+import dao.BookSearchDao;
 import dao.SqliteBookDao;
+import dao.SqliteBookSearchDao;
 import service.BookService;
 
 import java.util.Scanner;
@@ -9,7 +11,8 @@ public class Main {
 
         Scanner input = new Scanner(System.in);
         BookDao dao = new SqliteBookDao();
-        BookService service = new BookService(input, dao);
+        BookSearchDao searchDao = new SqliteBookSearchDao();
+        BookService service = new BookService(input, dao, searchDao);
 
         service.createTable();
 
@@ -26,7 +29,7 @@ public class Main {
             } else if (choice == 1) {
                 service.addBook();
             } else if (choice == 2) {
-                service.showAllBooks();
+                service.searchBooks();
             } else if (choice == 3) {
                 service.modifyBookInfo();
             } else if (choice == 4) {

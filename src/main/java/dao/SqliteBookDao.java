@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SqliteBookDao implements BookDao {
+
     private final String URL = "jdbc:sqlite:src/main/resources/books.db";
 
+    @Override
     public void createBookTable() {
         try (Connection conn = DriverManager.getConnection(URL)) {
             if (conn != null) {
@@ -36,6 +38,7 @@ public class SqliteBookDao implements BookDao {
         }
     }
 
+
     @Override
     public void insertBook(String title, String author, double price, int quantity) {
         try (Connection conn = DriverManager.getConnection(URL)) {
@@ -56,6 +59,7 @@ public class SqliteBookDao implements BookDao {
         }
     }
 
+
     @Override
     public void insertBook(String filename) {
         List<String> books = parseBookCSV(filename);
@@ -70,6 +74,7 @@ public class SqliteBookDao implements BookDao {
             insertBook(title, author, price, quantity);
         }
     }
+
 
     private List<String> parseBookCSV (String filename) {
         List<String> books = new ArrayList<>();
@@ -95,6 +100,7 @@ public class SqliteBookDao implements BookDao {
     }
 
 
+    @Override
     public void deleteBook(int id) {
         try (Connection conn = DriverManager.getConnection(URL)) {
 
@@ -111,7 +117,7 @@ public class SqliteBookDao implements BookDao {
     }
 
 
-
+    @Override
     public void updateBookPrice(int id, double price) {
         try (Connection conn = DriverManager.getConnection(URL)) {
 
@@ -128,6 +134,8 @@ public class SqliteBookDao implements BookDao {
         }
     }
 
+
+    @Override
     public void updateQuantity(int id, int quantity) {
         try (Connection conn = DriverManager.getConnection(URL)) {
 
@@ -142,31 +150,5 @@ public class SqliteBookDao implements BookDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public List<Book> getAllBooks() {
-        List<Book> books = new ArrayList<>();
-
-        try (Connection conn = DriverManager.getConnection(URL)) {
-
-            String sql = "SELECT * FROM books";
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-
-            while (rs.next()) {
-                Book book = new Book(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("author"),
-                        rs.getDouble("price"),
-                        rs.getInt("quantity")
-                );
-                books.add(book);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return books;
     }
 }

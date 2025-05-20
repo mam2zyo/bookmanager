@@ -1,20 +1,22 @@
 package service;
 
 import dao.BookDao;
+import dao.BookSearchDao;
 import model.Book;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class BookService {
     private final Scanner input;
     private final BookDao dao;
+    private final BookSearchDao searchDao;
 
-    public BookService(Scanner input, BookDao dao) {
+    public BookService(Scanner input, BookDao dao, BookSearchDao searchDao) {
         this.input = input;
         this.dao = dao;
+        this.searchDao = searchDao;
     }
 
     public void createTable() {
@@ -51,27 +53,87 @@ public class BookService {
     }
 
 
-    public Optional<Book> findByBookId(int id) {
+    public void searchBooks() {
+        System.out.println("1. id  |  2. 제목 or 작가명  |  3. 가격  |  4. 재고  |  0. 전체 도서");
+        System.out.print("조회 방법을 선택하세요: ");
+        int choice = input.nextInt();
+        input.nextLine();
 
-        List<Book> library = dao.getAllBooks();
+        List<Book> books = new ArrayList<>();
 
-        return library.stream()
-                .filter(book -> book.getId() == id)
-                .findFirst();
-    }
+        switch (choice) {
+            case 1:
+                System.out.print("id를 입력하세요: ");
+                int id = input.nextInt();
+                input.nextLine();
+                Book book = searchDao.findById(id);
 
+                if (book == null) {
+                    System.out.println("도서가 없습니다.");
+                } else {
+                    System.out.println(book);
+                }
+                break;
 
-    public List<Book> findByTitleOrAuthor(String substring) {
+            case 2:
+                System.out.print("도서명이나 작가명을 입력하세요: ");
+                String str = input.nextLine();
 
-        List<Book> library = dao.getAllBooks();
+                books = searchDao.findByTitleOrAuthor(str);
 
-        if (substring == null || substring.isEmpty()) {
-            throw new IllegalArgumentException("Invalid Argument");
+                for (Book item : books) {
+                    System.out.println(item);
+                }
+                break;
+
+            case 3:
+                System.out.print("하한 가격: ");
+                double min = input.nextDouble();
+                input.nextLine();
+                System.out.print("상한 가격: ");
+                double max = input.nextDouble();
+                input.nextLine();
+                books = searchDao.findByPriceRange(min, max);
+
+                if (books.isEmpty()) {
+                    System.out.println("해당 가격대의 도서가 없습니다.");
+                } else {
+                    for (Book item : books) {
+                        System.out.println(item);
+                    }
+                }
+                break;
+
+            case 4:
+                System.out.print("기준 수량: ");
+                int threshold = input.nextInt();
+                input.nextLine();
+                books = searchDao.findLowStock(threshold);
+
+                if (books.isEmpty()) {
+                    System.out.println("기준 수량 이하인 책이 없습니다.");
+                } else {
+                    for (Book item : books) {
+                        System.out.println(item);
+                    }
+                }
+                break;
+
+            case 0:
+                books = searchDao.getAllBooks();
+
+                if (books.isEmpty()) {
+                    System.out.println("등록된 도서가 없습니다.");
+                } else {
+                    for (Book item : books) {
+                        System.out.println(item);
+                    }
+                }
+                break;
+
+            default:
+                System.out.println("잘못된 번호입니다.");
         }
-        return library.stream()
-                .filter(book -> book.getTitle().contains(substring)
-                        || book.getAuthor().contains(substring))
-                .collect(Collectors.toList());
     }
 
 
@@ -82,12 +144,12 @@ public class BookService {
         int id = input.nextInt();
         input.nextLine();
 
-        if (findByBookId(id).isEmpty()) {
+        if (searchDao.findById(id) == null) {
             System.out.println("도서가 없습니다.");
             return;
         }
 
-        Book book = findByBookId(id).get();
+        Book book = searchDao.findById(id);
 
         System.out.println(book);
         System.out.println("1. 가격  |  2. 보유 수량");
@@ -123,16 +185,6 @@ public class BookService {
     }
 
 
-    public void showAllBooks() {
-
-        List<Book> library = dao.getAllBooks();
-
-        System.out.println("전체 도서 목록");
-        showBooks(library);
-        System.out.println();
-    }
-
-
     public void removeBook() {
 
         System.out.println("삭제하려는 도서의 id를 입력하세요");
@@ -140,9 +192,8 @@ public class BookService {
         int id = input.nextInt();
         input.nextLine();
 
-        if (findByBookId(id).isEmpty()) {
+        if (searchDao.findById(id) == null) {
             System.out.println("목록에 없는 도서입니다. 삭제할 수 없습니다.");
-            return;
         } else {
             dao.deleteBook(id);
         }
