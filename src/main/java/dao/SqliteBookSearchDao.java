@@ -16,13 +16,9 @@ public class SqliteBookSearchDao implements BookSearchDao {
             String sql = "SELECT * FROM books WHERE id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
-            ResultSet rs = pstmt.executeQuery(sql);
+            ResultSet rs = pstmt.executeQuery();
 
-            if (!rs.next()) {
-                return null;
-            }
-
-            do {
+            if (rs.next()) {
                 book = new Book(
                         rs.getInt("id"),
                         rs.getString("title"),
@@ -30,7 +26,8 @@ public class SqliteBookSearchDao implements BookSearchDao {
                         rs.getDouble("price"),
                         rs.getInt("quantity")
                 );
-            } while (rs.next());
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -48,9 +45,9 @@ public class SqliteBookSearchDao implements BookSearchDao {
                     " WHERE title LIKE ? COLLATE NOCASE" +
                     " OR author LIKE ? COLLATE NOCASE;";
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, substring);
-            pstmt.setString(2, substring);
-            ResultSet rs = pstmt.executeQuery(sql);
+            pstmt.setString(1, "%" + substring + "%");
+            pstmt.setString(2, "%" + substring + "%");
+            ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 Book book = new Book(
@@ -79,7 +76,7 @@ public class SqliteBookSearchDao implements BookSearchDao {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setDouble(1, min);
             pstmt.setDouble(2, max);
-            ResultSet rs = pstmt.executeQuery(sql);
+            ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 Book book = new Book(
@@ -107,7 +104,7 @@ public class SqliteBookSearchDao implements BookSearchDao {
             String sql = "SELECT * FROM books WHERE quantity <= ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, threshold);
-            ResultSet rs = pstmt.executeQuery(sql);
+            ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 Book book = new Book(

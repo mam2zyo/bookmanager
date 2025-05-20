@@ -81,8 +81,12 @@ public class BookService {
 
                 books = searchDao.findByTitleOrAuthor(str);
 
-                for (Book item : books) {
-                    System.out.println(item);
+                if (books.isEmpty()) {
+                    System.out.println("해당 문자열이 포함된 도서가 없습니다.");
+                } else {
+                    for (Book item : books) {
+                        System.out.println(item);
+                    }
                 }
                 break;
 
