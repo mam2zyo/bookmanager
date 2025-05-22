@@ -1,11 +1,11 @@
 package dao;
 
+import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import model.Book;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,7 @@ import java.util.List;
 public class SqliteBookDao implements BookDao {
 
     private final String URL = "jdbc:sqlite:src/main/resources/books.db";
+    private final String LOG_URL = "jdbc:sqlite:src/main/resources/books.log";
 
     @Override
     public void createBookTable() {
@@ -40,7 +41,7 @@ public class SqliteBookDao implements BookDao {
 
 
     @Override
-    public void insertBook(String title, String author, double price, int quantity) {
+    public boolean insertBook(String title, String author, double price, int quantity) {
         try (Connection conn = DriverManager.getConnection(URL)) {
 
             String sql = "INSERT INTO books(title, author, price, quantity) " +
@@ -54,49 +55,54 @@ public class SqliteBookDao implements BookDao {
                 pstmt.executeUpdate();
             }
 
+            return true;
+
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
 
     @Override
-    public void insertBook(String filename) {
-        List<String> books = parseBookCSV(filename);
+    public void insertBooks(String filename) {
 
-        for (String book : books) {
-            String[] data = book.split(",");
-            String title = data[0];
-            String author = data[1];
-            double price = Double.parseDouble(data[2]);
-            int quantity = Integer.parseInt(data[3]);
+        List<Book> books = parseBookCSV(filename);
+
+        for (Book book : books) {
+            String title = book.getTitle();
+            String author = book.getAuthor();
+            double price = book.getPrice();
+            int quantity = book.getQuantity();
 
             insertBook(title, author, price, quantity);
         }
     }
 
 
-    private List<String> parseBookCSV (String filename) {
-        List<String> books = new ArrayList<>();
+    private List<Book> parseBookCSV (String filename) {
 
-        try (FileReader fr = new FileReader(filename);
-             BufferedReader br = new BufferedReader(fr)) {
+        CsvMapper mapper = new CsvMapper();
 
-            String line;
+        CsvSchema schema = CsvSchema.builder()
+                .addColumn("title")
+                .addColumn("author")
+                .addColumn("price")
+                .addColumn("quantity")
+                .build()
+                .withHeader();
 
-            while ((line = br.readLine()) != null) {
-                books.add(line);
-            }
+        List<Book> bookList = new ArrayList<>();
 
-            books.remove(0); // header 제거
+        try (MappingIterator<Book> books = mapper.readerFor(Book.class)
+                .with(schema)
+                .readValues(new File(filename))) {
 
-        } catch (FileNotFoundException e) {
-            System.err.println(filename + " 파일을 찾을 수 없습니다.");
+            return books.readAll();
+
         } catch (IOException e) {
-            System.err.println("파일 읽기 오류" + e.getMessage());
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
-        return books;
     }
 
 

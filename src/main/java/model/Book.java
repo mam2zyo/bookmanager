@@ -1,27 +1,25 @@
 package model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
-@AllArgsConstructor
 @Getter
+@Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Book {
-    private final int id;
-    private final String title;
-    private final String author;
-    @Setter
+    @JsonIgnore
+    private int id;
+    private String title;
+    private String author;
     private double price;
-    @Setter
     private int quantity;
 
-    public Book(int id, String title, String author) {
-        this.id = id;
+    public Book(String title, String author, double price, int quantity) {
         this.title = title;
         this.author = author;
-        price = 0.0;
-        quantity = 0;
+        this.price = price;
+        this.quantity = quantity;
     }
 }

@@ -48,7 +48,7 @@ public class BookService {
             System.out.println("파일명을 경로와 함께 적어주세요: ");
             String filename = input.nextLine();
 
-            dao.insertBook(filename);
+            dao.insertBooks(filename);
         }
     }
 
@@ -175,7 +175,6 @@ public class BookService {
         } else {
             System.out.println("입력값이 정확하지 않습니다.");
         }
-
     }
 
 

@@ -11,7 +11,9 @@ public class SqliteBookSearchDao implements BookSearchDao {
     private final String URL = "jdbc:sqlite:src/main/resources/books.db";
 
     public Book findById(int id) {
+
         Book book = null;
+
         try (Connection conn = DriverManager.getConnection(URL)) {
             String sql = "SELECT * FROM books WHERE id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
