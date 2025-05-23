@@ -1,3 +1,28 @@
 도서 {ID: 40, 제목: 쉽게 배우는 데이터베이스, 저자: 이순신} 가 DB에서 삭제되었습니다.
 도서 {ID: 42, 제목: 자바스크립트 완벽 가이드, 저자: 윤인성}의 수량이 5에서 1로 변경되었습니다
 도서 {ID: 35, 제목: Automate the Boring Stuff with Python, 저자: Al Sweigart} 가 DB에서 삭제되었습니다.
+도서 {제목: 리눅스 커맨드라인 완벽 입문, 저자: William Shotts}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: HTTP 완벽 가이드, 저자: David Gourley}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: Head First Design Patterns, 저자: Eric Freeman}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: Introduction to Algorithms, 저자: Thomas H. Cormen}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: Refactoring, 저자: Martin Fowler}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: Programming Pearls, 저자: Jon Bentley}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: Learning Python, 저자: Mark Lutz}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: Design Patterns, 저자: Erich Gamma}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: The Art of Computer Programming, 저자: Donald Knuth}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: JavaScript: The Good Parts, 저자: Douglas Crockford}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: Code Complete, 저자: Steve McConnell}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: Automate the Boring Stuff with Python, 저자: Al Sweigart}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: Computer Networking: A Top-Down Approach, 저자: James Kurose}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: C 프로그래밍 완벽 입문, 저자: 김영훈}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: Do it! 안드로이드 앱 프로그래밍, 저자: 정재곤}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: 파이썬으로 배우는 알고리즘 트레이딩, 저자: 최용석}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: 쉽게 배우는 데이터베이스, 저자: 이순신}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: HTML5와 CSS3 완벽 가이드, 저자: 고경희}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: 자바스크립트 완벽 가이드, 저자: 윤인성}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: 리액트 프로그래밍 정석, 저자: 김민준}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: 스프링 부트로 배우는 자바 웹 개발, 저자: 박준영}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: 딥러닝 입문 with 파이썬, 저자: 최성철}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: 유니티 게임 프로그래밍, 저자: 이대현}가 성공적으로 DB에 저장되었습니다.
+도서 {제목: 클라우드 컴퓨팅 입문, 저자: 정민호}가 성공적으로 DB에 저장되었습니다.
+도서 {ID: 24, 제목: 클라우드 컴퓨팅 입문, 저자: 정민호}의 가격이 26000.000000에서 18000.000000로 변경되었습니다

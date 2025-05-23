@@ -15,11 +15,6 @@ public class BookService {
         this.bookDao = dao;
     }
 
-    public void createTable() {
-        bookDao.createBookTable();
-    }
-
-
     public void addBook() {
 
         System.out.println("입력방법을 선택하세요.");
@@ -115,6 +110,7 @@ public class BookService {
                 System.out.print("id를 입력하세요: ");
                 int id = input.nextInt();
                 input.nextLine();
+
                 Book book = bookDao.findById(id);
 
                 if (book == null) {
@@ -142,6 +138,7 @@ public class BookService {
                 System.out.print("상한 가격: ");
                 double max = input.nextDouble();
                 input.nextLine();
+
                 books = bookDao.findByPriceRange(min, max);
 
                 String noMatchForPrice = String.format("가격이 %f 이상 %f 미만인 도서가 없습니다.",
@@ -153,6 +150,7 @@ public class BookService {
                 System.out.print("기준 수량: ");
                 int threshold = input.nextInt();
                 input.nextLine();
+
                 books = bookDao.findLowStock(threshold);
 
                 String noMatchForStock = String.format("재고 수량이 %d 이하인 도서가 없습니다.",
@@ -177,7 +175,10 @@ public class BookService {
             System.out.println(msg);
         } else {
             books.forEach(System.out::println);
+
+
             System.out.println();
         }
     }
 }
+

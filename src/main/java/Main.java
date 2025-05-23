@@ -1,4 +1,5 @@
 import dao.BookDao;
+import dao.DatabaseInitializer;
 import dao.SqliteBookDao;
 import service.BookService;
 
@@ -7,11 +8,11 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
+        DatabaseInitializer.initializeDatabase();
+
         Scanner input = new Scanner(System.in);
         BookDao bookDao = new SqliteBookDao();
         BookService service = new BookService(input, bookDao);
-
-        service.createTable();
 
         while (true) {
             System.out.println("원하시는 서비스를 선택하세요.");
