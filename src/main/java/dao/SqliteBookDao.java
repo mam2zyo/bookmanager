@@ -10,34 +10,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dao.DatabaseUtil.*;
+
 public class SqliteBookDao implements BookDao {
 
-    private final String URL = "jdbc:sqlite:src/main/resources/books.db";
-    private final String LOGFILE = "src/main/resources/books.log";
-
-    @Override
-    public void createBookTable() {
-        try (Connection conn = DriverManager.getConnection(URL)) {
-            if (conn != null) {
-                String sql = "CREATE TABLE IF NOT EXISTS books ("
-                        + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                        + "title TEXT NOT NULL, "
-                        + "author TEXT, "
-                        + "price REAL, "
-                        + "quantity INTEGER"
-                        + ");";
-
-                try (Statement stmt = conn.createStatement()) {
-                    stmt.execute(sql);
-                    System.out.println("ok");
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    static final String CREATE_BOOKS_TABLE = "CREATE TABLE IF NOT EXISTS books ("
+            + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + "title TEXT NOT NULL, "
+            + "author TEXT, "
+            + "price REAL, "
+            + "quantity INTEGER"
+            + ");";
 
 
     private void logBook(String msg) {
@@ -48,8 +31,7 @@ public class SqliteBookDao implements BookDao {
             bw.newLine();
 
         } catch (IOException e) {
-            System.err.println("Log File 작성 중 오류 발생 " +
-                    e.getMessage());
+            System.err.println("Log 기록 중 오류 발생 " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -57,7 +39,7 @@ public class SqliteBookDao implements BookDao {
 
     @Override
     public boolean insertBook(String title, String author, double price, int quantity) {
-        try (Connection conn = DriverManager.getConnection(URL)) {
+        try (Connection conn = DriverManager.getConnection(DB_URL)) {
 
             String sql = "INSERT INTO books(title, author, price, quantity) " +
                     "VALUES(?, ?, ?, ?)";
@@ -71,8 +53,7 @@ public class SqliteBookDao implements BookDao {
             }
 
             String msg = String.format(
-                    "도서 {제목: %s, 저자: %s}가 성공적으로 DB에 저장되었습니다.",
-                    title, author);
+                    "도서 {제목: %s, 저자: %s}가 성공적으로 DB에 저장되었습니다.", title, author);
             logBook(msg);
 
             return true;
@@ -128,7 +109,7 @@ public class SqliteBookDao implements BookDao {
 
     @Override
     public void deleteBook(int id) {
-        try (Connection conn = DriverManager.getConnection(URL)) {
+        try (Connection conn = DriverManager.getConnection(DB_URL)) {
 
             String sql = "DELETE FROM books WHERE id = ?";
 
@@ -151,7 +132,7 @@ public class SqliteBookDao implements BookDao {
 
     @Override
     public void updateBookPrice(int id, double price) {
-        try (Connection conn = DriverManager.getConnection(URL)) {
+        try (Connection conn = DriverManager.getConnection(DB_URL)) {
 
             String sql = "UPDATE books SET price = ? WHERE id = ?";
 
@@ -176,7 +157,7 @@ public class SqliteBookDao implements BookDao {
 
     @Override
     public void updateQuantity(int id, int quantity) {
-        try (Connection conn = DriverManager.getConnection(URL)) {
+        try (Connection conn = DriverManager.getConnection(DB_URL)) {
 
             String sql = "UPDATE books SET quantity = ? WHERE id = ?";
 
@@ -203,7 +184,7 @@ public class SqliteBookDao implements BookDao {
 
         Book book = null;
 
-        try (Connection conn = DriverManager.getConnection(URL)) {
+        try (Connection conn = DriverManager.getConnection(DB_URL)) {
             String sql = "SELECT * FROM books WHERE id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
@@ -231,7 +212,7 @@ public class SqliteBookDao implements BookDao {
 
         List<Book> books = new ArrayList<>();
 
-        try (Connection conn = DriverManager.getConnection(URL)) {
+        try (Connection conn = DriverManager.getConnection(DB_URL)) {
 
             String sql = "SELECT * FROM books" +
                     " WHERE title LIKE ? COLLATE NOCASE" +
@@ -264,7 +245,7 @@ public class SqliteBookDao implements BookDao {
 
         List<Book> books = new ArrayList<>();
 
-        try (Connection conn = DriverManager.getConnection(URL)) {
+        try (Connection conn = DriverManager.getConnection(DB_URL)) {
 
             String sql = "SELECT * FROM books WHERE price BETWEEN ? AND ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -295,7 +276,7 @@ public class SqliteBookDao implements BookDao {
 
         List<Book> books = new ArrayList<>();
 
-        try (Connection conn = DriverManager.getConnection(URL)) {
+        try (Connection conn = DriverManager.getConnection(DB_URL)) {
 
             String sql = "SELECT * FROM books WHERE quantity <= ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -325,7 +306,7 @@ public class SqliteBookDao implements BookDao {
 
         List<Book> books = new ArrayList<>();
 
-        try (Connection conn = DriverManager.getConnection(URL)) {
+        try (Connection conn = DriverManager.getConnection(DB_URL)) {
 
             String sql = "SELECT * FROM books";
             Statement stmt = conn.createStatement();
