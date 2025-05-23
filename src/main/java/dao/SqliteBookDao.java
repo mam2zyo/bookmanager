@@ -322,6 +322,7 @@ public class SqliteBookDao implements BookDao {
 
     @Override
     public List<Book> getAllBooks() {
+
         List<Book> books = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(URL)) {

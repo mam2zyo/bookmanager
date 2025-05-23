@@ -8,8 +8,8 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner input = new Scanner(System.in);
-        BookDao dao = new SqliteBookDao();
-        BookService service = new BookService(input, dao);
+        BookDao bookDao = new SqliteBookDao();
+        BookService service = new BookService(input, bookDao);
 
         service.createTable();
 

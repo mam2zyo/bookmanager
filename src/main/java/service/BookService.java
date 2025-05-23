@@ -3,22 +3,22 @@ package service;
 import dao.BookDao;
 import model.Book;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class BookService {
     private final Scanner input;
-    private final BookDao dao;
+    private final BookDao bookDao;
 
     public BookService(Scanner input, BookDao dao) {
         this.input = input;
-        this.dao = dao;
+        this.bookDao = dao;
     }
 
     public void createTable() {
-        dao.createBookTable();
+        bookDao.createBookTable();
     }
+
 
     public void addBook() {
 
@@ -40,100 +40,12 @@ public class BookService {
             int quantity = input.nextInt();
             input.nextLine();
 
-            dao.insertBook(title, author, price, quantity);
+            bookDao.insertBook(title, author, price, quantity);
         } else if (choice == 2) {
             System.out.println("파일명을 경로와 함께 적어주세요: ");
             String filename = input.nextLine();
 
-            dao.insertBooks(filename);
-        }
-    }
-
-
-    public void searchBooks() {
-        System.out.println("1. id  |  2. 제목 or 작가명  |  3. 가격  |  4. 재고  |  0. 전체 도서");
-        System.out.print("조회 방법을 선택하세요: ");
-        int choice = input.nextInt();
-        input.nextLine();
-
-        List<Book> books = new ArrayList<>();
-
-        switch (choice) {
-            case 1:
-                System.out.print("id를 입력하세요: ");
-                int id = input.nextInt();
-                input.nextLine();
-                Book book = dao.findById(id);
-
-                if (book == null) {
-                    System.out.println("도서가 없습니다.");
-                } else {
-                    System.out.println(book);
-                }
-                break;
-
-            case 2:
-                System.out.print("도서명이나 작가명을 입력하세요: ");
-                String str = input.nextLine();
-
-                books = dao.findByTitleOrAuthor(str);
-
-                if (books.isEmpty()) {
-                    System.out.println("해당 문자열이 포함된 도서가 없습니다.");
-                } else {
-                    for (Book item : books) {
-                        System.out.println(item);
-                    }
-                }
-                break;
-
-            case 3:
-                System.out.print("하한 가격: ");
-                double min = input.nextDouble();
-                input.nextLine();
-                System.out.print("상한 가격: ");
-                double max = input.nextDouble();
-                input.nextLine();
-                books = dao.findByPriceRange(min, max);
-
-                if (books.isEmpty()) {
-                    System.out.println("해당 가격대의 도서가 없습니다.");
-                } else {
-                    for (Book item : books) {
-                        System.out.println(item);
-                    }
-                }
-                break;
-
-            case 4:
-                System.out.print("기준 수량: ");
-                int threshold = input.nextInt();
-                input.nextLine();
-                books = dao.findLowStock(threshold);
-
-                if (books.isEmpty()) {
-                    System.out.println("기준 수량 이하인 책이 없습니다.");
-                } else {
-                    for (Book item : books) {
-                        System.out.println(item);
-                    }
-                }
-                break;
-
-            case 0:
-                books = dao.getAllBooks();
-
-                if (books.isEmpty()) {
-                    System.out.println("등록된 도서가 없습니다.");
-                } else {
-                    for (Book item : books) {
-                        System.out.println(item);
-                    }
-                }
-                break;
-
-            default:
-                System.out.println("잘못된 번호입니다.");
+            bookDao.insertBooks(filename);
         }
     }
 
@@ -145,12 +57,12 @@ public class BookService {
         int id = input.nextInt();
         input.nextLine();
 
-        if (dao.findById(id) == null) {
-            System.out.println("도서가 없습니다.");
+        if (bookDao.findById(id) == null) {
+            System.out.println("해당 ID의 도서가 없습니다.");
             return;
         }
 
-        Book book = dao.findById(id);
+        Book book = bookDao.findById(id);
 
         System.out.println(book);
         System.out.println("1. 가격  |  2. 보유 수량");
@@ -163,24 +75,14 @@ public class BookService {
             System.out.print("새로운 가격: ");
             double newPrice = input.nextDouble();
             input.nextLine();
-            dao.updateBookPrice(id, newPrice);
+            bookDao.updateBookPrice(id, newPrice);
         } else if (choice == 2) {
             System.out.print("현재 수량: ");
             int newBookStock = input.nextInt();
             input.nextLine();
-            dao.updateQuantity(id, newBookStock);
+            bookDao.updateQuantity(id, newBookStock);
         } else {
             System.out.println("입력값이 정확하지 않습니다.");
-        }
-    }
-
-
-    public void showBooks(List<Book> books) {
-        if (books.isEmpty()) {
-            System.out.println("목록에 도서가 없습니다.");
-        } else {
-            books.forEach(System.out::println);
-            System.out.println();
         }
     }
 
@@ -192,10 +94,90 @@ public class BookService {
         int id = input.nextInt();
         input.nextLine();
 
-        if (dao.findById(id) == null) {
+        if (bookDao.findById(id) == null) {
             System.out.println("목록에 없는 도서입니다. 삭제할 수 없습니다.");
         } else {
-            dao.deleteBook(id);
+            bookDao.deleteBook(id);
+        }
+    }
+
+
+    public void searchBooks() {
+        System.out.println("1. id  |  2. 제목 or 작가명  |  3. 가격  |  4. 재고  |  0. 전체 도서");
+        System.out.print("조회 방법을 선택하세요: ");
+        int choice = input.nextInt();
+        input.nextLine();
+
+        List<Book> books;
+
+        switch (choice) {
+            case 1:
+                System.out.print("id를 입력하세요: ");
+                int id = input.nextInt();
+                input.nextLine();
+                Book book = bookDao.findById(id);
+
+                if (book == null) {
+                    System.out.println("도서가 없습니다.");
+                } else {
+                    System.out.println(book);
+                }
+                break;
+
+            case 2:
+                System.out.print("도서명이나 작가명을 입력하세요: ");
+                String str = input.nextLine();
+
+                books = bookDao.findByTitleOrAuthor(str);
+
+                String noMatchForSubstring = String.format("'" + str + "' 이(가) 포함된 도서가 없습니다.");
+
+                showBooks(books, noMatchForSubstring);
+                break;
+
+            case 3:
+                System.out.print("하한 가격: ");
+                double min = input.nextDouble();
+                input.nextLine();
+                System.out.print("상한 가격: ");
+                double max = input.nextDouble();
+                input.nextLine();
+                books = bookDao.findByPriceRange(min, max);
+
+                String noMatchForPrice = String.format("가격이 %f 이상 %f 미만인 도서가 없습니다.",
+                min, max);
+                showBooks(books, noMatchForPrice);
+                break;
+
+            case 4:
+                System.out.print("기준 수량: ");
+                int threshold = input.nextInt();
+                input.nextLine();
+                books = bookDao.findLowStock(threshold);
+
+                String noMatchForStock = String.format("재고 수량이 %d 이하인 도서가 없습니다.",
+                        threshold);
+                showBooks(books, noMatchForStock);
+                break;
+
+            case 0:
+                books = bookDao.getAllBooks();
+                String noBook = "등록된 도서가 없습니다.";
+                showBooks(books, noBook);
+                break;
+
+            default:
+                System.out.println("잘못된 번호입니다.");
+        }
+    }
+
+
+    public void showBooks(List<Book> books, String msg) {
+        if (books == null || books.isEmpty()) {
+            System.out.println(msg);
+        } else {
+            books.forEach(System.out::println);
+            System.out.println();
         }
     }
 }
