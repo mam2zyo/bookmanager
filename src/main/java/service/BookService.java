@@ -1,7 +1,6 @@
 package service;
 
 import dao.BookDao;
-import dao.BookSearchDao;
 import model.Book;
 
 import java.util.ArrayList;
@@ -11,12 +10,10 @@ import java.util.Scanner;
 public class BookService {
     private final Scanner input;
     private final BookDao dao;
-    private final BookSearchDao searchDao;
 
-    public BookService(Scanner input, BookDao dao, BookSearchDao searchDao) {
+    public BookService(Scanner input, BookDao dao) {
         this.input = input;
         this.dao = dao;
-        this.searchDao = searchDao;
     }
 
     public void createTable() {
@@ -66,7 +63,7 @@ public class BookService {
                 System.out.print("id를 입력하세요: ");
                 int id = input.nextInt();
                 input.nextLine();
-                Book book = searchDao.findById(id);
+                Book book = dao.findById(id);
 
                 if (book == null) {
                     System.out.println("도서가 없습니다.");
@@ -79,7 +76,7 @@ public class BookService {
                 System.out.print("도서명이나 작가명을 입력하세요: ");
                 String str = input.nextLine();
 
-                books = searchDao.findByTitleOrAuthor(str);
+                books = dao.findByTitleOrAuthor(str);
 
                 if (books.isEmpty()) {
                     System.out.println("해당 문자열이 포함된 도서가 없습니다.");
@@ -97,7 +94,7 @@ public class BookService {
                 System.out.print("상한 가격: ");
                 double max = input.nextDouble();
                 input.nextLine();
-                books = searchDao.findByPriceRange(min, max);
+                books = dao.findByPriceRange(min, max);
 
                 if (books.isEmpty()) {
                     System.out.println("해당 가격대의 도서가 없습니다.");
@@ -112,7 +109,7 @@ public class BookService {
                 System.out.print("기준 수량: ");
                 int threshold = input.nextInt();
                 input.nextLine();
-                books = searchDao.findLowStock(threshold);
+                books = dao.findLowStock(threshold);
 
                 if (books.isEmpty()) {
                     System.out.println("기준 수량 이하인 책이 없습니다.");
@@ -124,7 +121,7 @@ public class BookService {
                 break;
 
             case 0:
-                books = searchDao.getAllBooks();
+                books = dao.getAllBooks();
 
                 if (books.isEmpty()) {
                     System.out.println("등록된 도서가 없습니다.");
@@ -148,12 +145,12 @@ public class BookService {
         int id = input.nextInt();
         input.nextLine();
 
-        if (searchDao.findById(id) == null) {
+        if (dao.findById(id) == null) {
             System.out.println("도서가 없습니다.");
             return;
         }
 
-        Book book = searchDao.findById(id);
+        Book book = dao.findById(id);
 
         System.out.println(book);
         System.out.println("1. 가격  |  2. 보유 수량");
@@ -195,7 +192,7 @@ public class BookService {
         int id = input.nextInt();
         input.nextLine();
 
-        if (searchDao.findById(id) == null) {
+        if (dao.findById(id) == null) {
             System.out.println("목록에 없는 도서입니다. 삭제할 수 없습니다.");
         } else {
             dao.deleteBook(id);

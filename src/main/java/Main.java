@@ -1,7 +1,5 @@
 import dao.BookDao;
-import dao.BookSearchDao;
 import dao.SqliteBookDao;
-import dao.SqliteBookSearchDao;
 import service.BookService;
 
 import java.util.Scanner;
@@ -11,8 +9,7 @@ public class Main {
 
         Scanner input = new Scanner(System.in);
         BookDao dao = new SqliteBookDao();
-        BookSearchDao searchDao = new SqliteBookSearchDao();
-        BookService service = new BookService(input, dao, searchDao);
+        BookService service = new BookService(input, dao);
 
         service.createTable();
 

@@ -10,4 +10,9 @@ public interface BookDao {
     void deleteBook(int id);
     void updateBookPrice(int id, double price);
     void updateQuantity(int id, int quantity);
+    Book findById(int id);
+    List<Book> findByTitleOrAuthor(String substring);
+    List<Book> findByPriceRange(double min, double max);
+    List<Book> findLowStock (int threshold);
+    List<Book> getAllBooks();
 }
