@@ -6,9 +6,8 @@ import service.BookService;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
 
-        DatabaseInitializer.initializeDatabase();
+    public static void initShell() {
 
         Scanner input = new Scanner(System.in);
         BookDao bookDao = new SqliteBookDao();
@@ -20,7 +19,7 @@ public class Main {
             System.out.print("선 택 : ");
             int choice = input.nextInt();
             input.nextLine();
-            
+
             if (choice == 0) {
                 System.out.println("프로그램을 종료합니다.");
                 return;
@@ -36,5 +35,18 @@ public class Main {
                 System.out.println("잘못된 입력입니다.");
             }
         }
+    }
+
+    public static void main(String[] args) {
+
+        try {
+            DatabaseInitializer.initializeDatabase();
+        } catch (RuntimeException e) {
+            System.err.println("DB 초기화 오류: " + e.getMessage());
+            System.out.println("프로그램을 종료합니다.");
+            return;
+        }
+
+        initShell();
     }
 }

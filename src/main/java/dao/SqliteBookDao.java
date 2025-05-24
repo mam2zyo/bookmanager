@@ -10,9 +10,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dao.DatabaseUtil.*;
+import static AppConfig.*;
 
 public class SqliteBookDao implements BookDao {
+
 
     static final String CREATE_BOOKS_TABLE = "CREATE TABLE IF NOT EXISTS books ("
             + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -24,7 +25,7 @@ public class SqliteBookDao implements BookDao {
 
 
     private void logBook(String msg) {
-        try (FileWriter fw = new FileWriter(LOGFILE, true);
+        try (FileWriter fw = new FileWriter(APP_LOG_FILE, true);
              BufferedWriter bw = new BufferedWriter(fw)) {
 
             bw.write(msg);

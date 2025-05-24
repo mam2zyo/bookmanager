@@ -52,12 +52,12 @@ public class BookService {
         int id = input.nextInt();
         input.nextLine();
 
-        if (bookDao.findById(id) == null) {
+        Book book = bookDao.findById(id);
+
+        if (book == null) {
             System.out.println("해당 ID의 도서가 없습니다.");
             return;
         }
-
-        Book book = bookDao.findById(id);
 
         System.out.println(book);
         System.out.println("1. 가격  |  2. 보유 수량");
@@ -175,10 +175,7 @@ public class BookService {
             System.out.println(msg);
         } else {
             books.forEach(System.out::println);
-
-
             System.out.println();
         }
     }
 }
-
