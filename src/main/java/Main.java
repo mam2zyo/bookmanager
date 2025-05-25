@@ -1,5 +1,5 @@
 import dao.BookDao;
-import dao.DatabaseInitializer;
+import dao.DatabaseUtil;
 import dao.SqliteBookDao;
 import service.BookService;
 
@@ -22,6 +22,7 @@ public class Main {
 
             if (choice == 0) {
                 System.out.println("프로그램을 종료합니다.");
+                input.close();
                 return;
             } else if (choice == 1) {
                 service.addBook();
@@ -40,13 +41,13 @@ public class Main {
     public static void main(String[] args) {
 
         try {
-            DatabaseInitializer.initializeDatabase();
+            DatabaseUtil.initializeDatabase();
         } catch (RuntimeException e) {
             System.err.println("DB 초기화 오류: " + e.getMessage());
             System.out.println("프로그램을 종료합니다.");
             return;
         }
 
-        initShell();
+        Main.initShell();
     }
 }

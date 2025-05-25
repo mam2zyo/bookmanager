@@ -3,6 +3,7 @@ package dao;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import log.AppLog;
 import model.Book;
 
 import java.io.*;
@@ -10,10 +11,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static AppConfig.*;
+import static config.AppConfig.DB_URL;
 
 public class SqliteBookDao implements BookDao {
-
 
     static final String CREATE_BOOKS_TABLE = "CREATE TABLE IF NOT EXISTS books ("
             + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -22,20 +22,6 @@ public class SqliteBookDao implements BookDao {
             + "price REAL, "
             + "quantity INTEGER"
             + ");";
-
-
-    private void logBook(String msg) {
-        try (FileWriter fw = new FileWriter(APP_LOG_FILE, true);
-             BufferedWriter bw = new BufferedWriter(fw)) {
-
-            bw.write(msg);
-            bw.newLine();
-
-        } catch (IOException e) {
-            System.err.println("Log 기록 중 오류 발생 " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
 
 
     @Override
@@ -55,7 +41,7 @@ public class SqliteBookDao implements BookDao {
 
             String msg = String.format(
                     "도서 {제목: %s, 저자: %s}가 성공적으로 DB에 저장되었습니다.", title, author);
-            logBook(msg);
+            AppLog.writeLog(msg);
 
             return true;
 
@@ -94,8 +80,6 @@ public class SqliteBookDao implements BookDao {
                 .build()
                 .withHeader();
 
-        List<Book> bookList = new ArrayList<>();
-
         try (MappingIterator<Book> books = mapper.readerFor(Book.class)
                 .with(schema)
                 .readValues(new File(filename))) {
@@ -123,7 +107,7 @@ public class SqliteBookDao implements BookDao {
 
             String msg = String.format("도서 {ID: %s, 제목: %s, 저자: %s} 가 DB에서 삭제되었습니다.",
                     id, book.getTitle(), book.getAuthor());
-            logBook(msg);
+            AppLog.writeLog(msg);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -148,7 +132,7 @@ public class SqliteBookDao implements BookDao {
             String msg = String.format(
                     "도서 {ID: %d, 제목: %s, 저자: %s}의 가격이 %f에서 %f로 변경되었습니다",
                     id, book.getTitle(), book.getAuthor(), book.getPrice(), price);
-            logBook(msg);
+            AppLog.writeLog(msg);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -173,7 +157,7 @@ public class SqliteBookDao implements BookDao {
             String msg = String.format(
                     "도서 {ID: %d, 제목: %s, 저자: %s}의 수량이 %d에서 %d로 변경되었습니다",
                     id, book.getTitle(), book.getAuthor(), book.getQuantity(), quantity);
-            logBook(msg);
+            AppLog.writeLog(msg);
 
         } catch (SQLException e) {
             e.printStackTrace();
