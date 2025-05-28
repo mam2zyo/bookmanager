@@ -166,29 +166,30 @@ public class SqliteBookDao implements BookDao {
 
     @Override
     public Book findById(int id) {
+        final String SELECT_BOOK_BY_ID = "SELECT * FROM books WHERE id = ?";
 
-        Book book = null;
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(SELECT_BOOK_BY_ID)) {
 
-        try (Connection conn = DriverManager.getConnection(DB_URL)) {
-            String sql = "SELECT * FROM books WHERE id = ?";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
-            ResultSet rs = pstmt.executeQuery();
 
-            if (rs.next()) {
-                book = new Book(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("author"),
-                        rs.getDouble("price"),
-                        rs.getInt("quantity")
-                );
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    Book book = new Book(
+                            rs.getInt("id"),
+                            rs.getString("title"),
+                            rs.getString("author"),
+                            rs.getDouble("price"),
+                            rs.getInt("quantity")
+                    );
+                    return book;
+                }
             }
-
         } catch (SQLException e) {
+            System.err.println("도서 검색 오류: " + e.getMessage());
             e.printStackTrace();
         }
-        return book;
+        return null;
     }
 
 
