@@ -21,7 +21,7 @@ public class SqliteBookDao implements BookDao {
             + "author TEXT, "
             + "price REAL, "
             + "quantity INTEGER"
-            + ");";
+            + ")";
 
 
     @Override
@@ -198,31 +198,34 @@ public class SqliteBookDao implements BookDao {
 
         List<Book> books = new ArrayList<>();
 
-        try (Connection conn = DriverManager.getConnection(DB_URL)) {
+        String sql = "SELECT * FROM books" +
+                " WHERE title LIKE ? COLLATE NOCASE" +
+                " OR author LIKE ? COLLATE NOCASE";
 
-            String sql = "SELECT * FROM books" +
-                    " WHERE title LIKE ? COLLATE NOCASE" +
-                    " OR author LIKE ? COLLATE NOCASE;";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
             pstmt.setString(1, "%" + substring + "%");
             pstmt.setString(2, "%" + substring + "%");
-            ResultSet rs = pstmt.executeQuery();
 
-            while (rs.next()) {
-                Book book = new Book(
-                        rs.getInt("id"),
-                        rs.getString("title"),
-                        rs.getString("author"),
-                        rs.getDouble("price"),
-                        rs.getInt("quantity")
-                );
-                books.add(book);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Book book = new Book(
+                            rs.getInt("id"),
+                            rs.getString("title"),
+                            rs.getString("author"),
+                            rs.getDouble("price"),
+                            rs.getInt("quantity")
+                    );
+                    books.add(book);
+                }
+                return books;
             }
-
         } catch (SQLException e) {
+            System.err.println("도서 검색 중 오류: " + e.getMessage());
             e.printStackTrace();
         }
-        return books;
+        return new ArrayList<>();
     }
 
 
