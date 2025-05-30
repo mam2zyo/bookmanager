@@ -18,4 +18,11 @@ public class Loan {
         this.borrower = borrower;
         this.loanDate = loanDate;
     }
+
+    public Loan(int id, int bookId, String borrower, String loanDate) {
+        this.id = id;
+        this.bookId = bookId;
+        this.borrower = borrower;
+        this.loanDate = loanDate;
+    }
 }
