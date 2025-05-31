@@ -91,13 +91,6 @@ public class LoanService {
     public List<Loan> getLoansByUser() {
         System.out.print("검색하려는 사용자 이름을 입력하세요: ");
         String borrower = scanner.nextLine();
-
         return loanDao.findLoansByUser(borrower);
-    }
-
-    public void showLoansByUser() {
-
-
-
     }
 }
