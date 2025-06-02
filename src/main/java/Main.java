@@ -18,6 +18,7 @@ public class Main {
 
             System.out.println("원하시는 서비스를 선택하세요.");
             System.out.println("1. 도서 관리  |  2. 대출 관리  |  0. 종료 ");
+            System.out.print("선 택 : ");
 
             int choiceMain = scanner.nextInt();
             scanner.nextLine();
@@ -39,7 +40,7 @@ public class Main {
                     case 1:
                         bookService.addBook(); break;
                     case 2:
-                        bookService.searchBooks();
+                        bookService.searchBooks(); break;
                     case 3:
                         bookService.modifyBookInfo(); break;
                     case 4:
@@ -49,6 +50,7 @@ public class Main {
                 }
 
             } else if (choiceMain == 2) {
+
                 System.out.println("1. 대출 등록  |  2. 도서 반납  |  3. 대출 조회");
                 System.out.print("선 택 : ");
                 int choice = scanner.nextInt();
@@ -56,22 +58,19 @@ public class Main {
 
                 switch (choice) {
                     case 1 :
-                        loanService.borrowBook();
+                        loanService.borrowBook(); break;
                     case 2 :
-                        loanService.returnBook();
+                        loanService.returnBook(); break;
                     case 3:
-                        loanService.showActiveLoans();
-
+                        loanService.searchLoans(); break;
+                    default:
+                        System.out.println("잘못된 입력입니다.");
                 }
 
-
-
+            }  else {
+                System.out.println("잘못된 입력입니다.");
             }
-
-            }
-
-
-
+        }
     }
 
     public static void main(String[] args) {
@@ -83,7 +82,6 @@ public class Main {
             System.out.println("프로그램을 종료합니다.");
             return;
         }
-
         Main.initShell();
     }
 }

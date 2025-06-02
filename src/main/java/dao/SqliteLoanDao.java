@@ -197,7 +197,7 @@ public class SqliteLoanDao implements LoanDao {
                             rs.getInt("id"),
                             rs.getInt("book_id"),
                             rs.getString("borrower"),
-                            rs.getString("return_date")
+                            rs.getString("loan_date")
                     );
                     loans.add(loan);
                 }

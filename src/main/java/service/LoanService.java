@@ -65,16 +65,16 @@ public class LoanService {
 
     public void searchLoans() {
         System.out.println("조회 방법을 선택하세요.");
-        System.out.print("1. 미반납 도서 검색  | 2. 사용자별 대출 이력");
+        System.out.println("1. 미반납 도서 검색  | 2. 사용자별 대출 이력");
+        System.out.print("선 택: ");
         int choice = scanner.nextInt();
         scanner.nextLine();
 
         if (choice == 1) {
             showActiveLoans();
         } else if (choice == 2) {
-
+            showLoansByUser();
         }
-
     }
 
 
@@ -84,7 +84,6 @@ public class LoanService {
 
 
     public void showActiveLoans() {
-
         List<Loan> loans = getActiveLoans();
 
         if (loans.isEmpty()) {
@@ -92,11 +91,17 @@ public class LoanService {
             return;
         }
 
-        System.out.println(" 번호 |           도서명         |       저자        |     대출자     |       대출일        ");
         for (int i = 0; i < loans.size(); i++) {
             Book book = bookDao.findById(loans.get(i).getBookId());
-            System.out.printf("%d\t%s\t%s\t%s\t%s",
-                    i + 1, book.getTitle(), book.getAuthor(), loans.get(i).getBorrower(), loans.get(i).getLoanDate());
+
+            int loanId = loans.get(i).getId();
+            String title = book.getTitle();
+            String author = book.getAuthor();
+            String borrower = loans.get(i).getBorrower();
+            String loanDate = loans.get(i).getLoanDate();
+
+            System.out.printf("%d\t대출 ID=%d\t%s\t%s\t%s\t%s",
+                    i + 1, loanId, title, author, borrower, loanDate);
             System.out.println();
         }
     }
@@ -110,7 +115,24 @@ public class LoanService {
     }
 
     public void showLoansByUser() {
+        List<Loan> loans = getLoansByUser();
 
+        if (loans.isEmpty()) {
+            System.out.println("도서 대출 이력이 없습니다.");
+            return;
+        }
 
+        for (int i = 0; i < loans.size(); i++) {
+            Book book = bookDao.findById(loans.get(i).getBookId());
+
+            int loanId = loans.get(i).getId();
+            String loanDate = loans.get(i).getLoanDate();
+            String title = book.getTitle();
+            String returnDate = loans.get(i).getReturnDate();
+
+            System.out.printf("%d\t대출 ID=%d\t%s\t%s\t%s",
+                    i + 1, loanId, loanDate, title, returnDate == null ? "미반납" : returnDate);
+            System.out.println();
+        }
     }
 }
