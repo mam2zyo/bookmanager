@@ -97,7 +97,5 @@ public class LoanService {
 
     public void showLoansByUser() {
 
-
-
     }
 }
