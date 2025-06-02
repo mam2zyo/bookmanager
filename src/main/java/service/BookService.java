@@ -170,7 +170,7 @@ public class BookService {
     }
 
 
-    public void showBooks(List<Book> books, String msg) {
+    private void showBooks(List<Book> books, String msg) {
         if (books == null || books.isEmpty()) {
             System.out.println(msg);
         } else {

@@ -63,6 +63,20 @@ public class LoanService {
         return loanDao.returnBook(loanId);
     }
 
+    public void searchLoans() {
+        System.out.println("조회 방법을 선택하세요.");
+        System.out.print("1. 미반납 도서 검색  | 2. 사용자별 대출 이력");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        if (choice == 1) {
+            showActiveLoans();
+        } else if (choice == 2) {
+
+        }
+
+    }
+
 
     public List<Loan> getActiveLoans() {
         return loanDao.findActiveLoans();
@@ -71,7 +85,7 @@ public class LoanService {
 
     public void showActiveLoans() {
 
-        List<Loan> loans = loanDao.findActiveLoans();
+        List<Loan> loans = getActiveLoans();
 
         if (loans.isEmpty()) {
             System.out.println("미반납 도서가 없습니다.");
@@ -96,7 +110,6 @@ public class LoanService {
     }
 
     public void showLoansByUser() {
-
 
 
     }
