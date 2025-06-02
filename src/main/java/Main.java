@@ -1,44 +1,27 @@
-import dao.BookDao;
-import dao.DatabaseUtil;
-import dao.SqliteBookDao;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+import dao.*;
 import service.BookService;
+import service.LoanService;
 
-import java.util.Scanner;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 public class Main {
 
-    public static void initShell() {
+    public static void main(String[] args) throws IOException {
 
-        Scanner input = new Scanner(System.in);
+        int port = 8080;
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+
         BookDao bookDao = new SqliteBookDao();
-        BookService service = new BookService(input, bookDao);
-
-        while (true) {
-            System.out.println("원하시는 서비스를 선택하세요.");
-            System.out.println("1. 도서 추가  |  2. 도서 조회  |  3. 도서 정보 수정  |  4. 도서 삭제  |  0. 종료 ");
-            System.out.print("선 택 : ");
-            int choice = input.nextInt();
-            input.nextLine();
-
-            if (choice == 0) {
-                System.out.println("프로그램을 종료합니다.");
-                input.close();
-                return;
-            } else if (choice == 1) {
-                service.addBook();
-            } else if (choice == 2) {
-                service.searchBooks();
-            } else if (choice == 3) {
-                service.modifyBookInfo();
-            } else if (choice == 4) {
-                service.removeBook();
-            } else {
-                System.out.println("잘못된 입력입니다.");
-            }
-        }
-    }
-
-    public static void main(String[] args) {
+        LoanDao loanDao = new SqliteLoanDao();
+        LoanService loanService = new LoanService(loanDao, bookDao);
 
         try {
             DatabaseUtil.initializeDatabase();
@@ -48,6 +31,60 @@ public class Main {
             return;
         }
 
-        Main.initShell();
+        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+
+        server.createContext("/", new FormHandler());
+        server.createContext("/hello", new HelloHandler());
+
+        server.setExecutor(null);
+        server.start();
+        System.out.println("서버 시작됨: http://localhost:8080/");
     }
+
+
+    static class FormHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            String html = """
+                    <html>
+                        <body>
+                          <h2>이름을 입력하세요</h2>
+                          <form method="POST" action="/hello">
+                            이름: <input type="text" name="name">
+                            <input type="submit" value="제출">
+                          </form>
+                        </body>
+                    </html>
+                    """;
+
+            exchange.sendResponseHeaders(200, html.getBytes().length);
+            OutputStream os = exchange.getResponseBody();
+            os.write(html.getBytes());
+            os.close();
+        }
+    }
+
+
+    static class HelloHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            if (!exchange.getRequestMethod().equalsIgnoreCase("POST")) {
+                exchange.sendResponseHeaders(405, -1); // Method Not Allowed
+                return;
+            }
+
+            InputStream is = exchange.getRequestBody();
+            String formData = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            Map<String, String> params = parseFormData(formData);
+
+            String name = params.getOrDefault("name", "손님");
+            String response = "<h1>안녕하세요, " + name + "님</h1>";
+
+            exchange.sendResponseHeaders(200, response.getBytes().length);
+            OutputStream os = exchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+
 }
