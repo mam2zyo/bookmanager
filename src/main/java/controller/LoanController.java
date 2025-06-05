@@ -16,5 +16,6 @@ public class LoanController {
         String borrower = params.get("borrower");
 
         boolean success = loanService.borrowBook(bookId, borrower);
+        return "";
     }
 }

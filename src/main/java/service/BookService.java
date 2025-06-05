@@ -7,12 +7,17 @@ import java.util.List;
 import java.util.Scanner;
 
 public class BookService {
-    private final Scanner input;
+    private final Scanner scanner;
     private final BookDao bookDao;
 
-    public BookService(Scanner input, BookDao dao) {
-        this.input = input;
-        this.bookDao = dao;
+    public BookService (BookDao bookDao) {
+        this.scanner = null;
+        this.bookDao = bookDao;
+    }
+
+    public BookService(Scanner input, BookDao bookDao) {
+        this.scanner = input;
+        this.bookDao = bookDao;
     }
 
     public void addBook() {
@@ -20,25 +25,25 @@ public class BookService {
         System.out.println("입력방법을 선택하세요.");
         System.out.print("1. 직접 입력  | 2. csv 파일 입력 : ");
 
-        int choice = input.nextInt();
-        input.nextLine();
+        int choice = scanner.nextInt();
+        scanner.nextLine();
 
         if (choice == 1) {
             System.out.print("제목: ");
-            String title = input.nextLine();
+            String title = scanner.nextLine();
             System.out.print("저자: ");
-            String author = input.nextLine();
+            String author = scanner.nextLine();
             System.out.print("가격: ");
-            double price = input.nextDouble();
-            input.nextLine();
+            double price = scanner.nextDouble();
+            scanner.nextLine();
             System.out.print("수량: ");
-            int quantity = input.nextInt();
-            input.nextLine();
+            int quantity = scanner.nextInt();
+            scanner.nextLine();
 
             bookDao.insertBook(title, author, price, quantity);
         } else if (choice == 2) {
             System.out.println("파일명을 경로와 함께 적어주세요: ");
-            String filename = input.nextLine();
+            String filename = scanner.nextLine();
 
             bookDao.insertBooks(filename);
         }
@@ -49,8 +54,8 @@ public class BookService {
 
         System.out.println("변경하려는 도서의 id를 입력하세요");
         System.out.print("id : ");
-        int id = input.nextInt();
-        input.nextLine();
+        int id = scanner.nextInt();
+        scanner.nextLine();
 
         Book book = bookDao.findById(id);
 
@@ -63,18 +68,18 @@ public class BookService {
         System.out.println("1. 가격  |  2. 보유 수량");
         System.out.print("선택: ");
 
-        int choice = input.nextInt();
-        input.nextLine();
+        int choice = scanner.nextInt();
+        scanner.nextLine();
 
         if (choice == 1) {
             System.out.print("새로운 가격: ");
-            double newPrice = input.nextDouble();
-            input.nextLine();
+            double newPrice = scanner.nextDouble();
+            scanner.nextLine();
             bookDao.updateBookPrice(id, newPrice);
         } else if (choice == 2) {
             System.out.print("현재 수량: ");
-            int newBookStock = input.nextInt();
-            input.nextLine();
+            int newBookStock = scanner.nextInt();
+            scanner.nextLine();
             bookDao.updateQuantity(id, newBookStock);
         } else {
             System.out.println("입력값이 정확하지 않습니다.");
@@ -86,8 +91,8 @@ public class BookService {
 
         System.out.println("삭제하려는 도서의 id를 입력하세요");
         System.out.print("id : ");
-        int id = input.nextInt();
-        input.nextLine();
+        int id = scanner.nextInt();
+        scanner.nextLine();
 
         if (bookDao.findById(id) == null) {
             System.out.println("목록에 없는 도서입니다. 삭제할 수 없습니다.");
@@ -100,16 +105,16 @@ public class BookService {
     public void searchBooks() {
         System.out.println("1. id  |  2. 제목 or 작가명  |  3. 가격  |  4. 재고  |  0. 전체 도서");
         System.out.print("조회 방법을 선택하세요: ");
-        int choice = input.nextInt();
-        input.nextLine();
+        int choice = scanner.nextInt();
+        scanner.nextLine();
 
         List<Book> books;
 
         switch (choice) {
             case 1:
                 System.out.print("id를 입력하세요: ");
-                int id = input.nextInt();
-                input.nextLine();
+                int id = scanner.nextInt();
+                scanner.nextLine();
 
                 Book book = bookDao.findById(id);
 
@@ -122,7 +127,7 @@ public class BookService {
 
             case 2:
                 System.out.print("도서명이나 작가명을 입력하세요: ");
-                String str = input.nextLine();
+                String str = scanner.nextLine();
 
                 books = bookDao.findByTitleOrAuthor(str);
 
@@ -133,11 +138,11 @@ public class BookService {
 
             case 3:
                 System.out.print("하한 가격: ");
-                double min = input.nextDouble();
-                input.nextLine();
+                double min = scanner.nextDouble();
+                scanner.nextLine();
                 System.out.print("상한 가격: ");
-                double max = input.nextDouble();
-                input.nextLine();
+                double max = scanner.nextDouble();
+                scanner.nextLine();
 
                 books = bookDao.findByPriceRange(min, max);
 
@@ -148,8 +153,8 @@ public class BookService {
 
             case 4:
                 System.out.print("기준 수량: ");
-                int threshold = input.nextInt();
-                input.nextLine();
+                int threshold = scanner.nextInt();
+                scanner.nextLine();
 
                 books = bookDao.findLowStock(threshold);
 

@@ -16,11 +16,17 @@ import static config.AppConfig.DB_URL;
 
 public class LoanService {
 
+    private Scanner scanner;
     private LoanDao loanDao;
     private BookDao bookDao;
 
-    public LoanService(Scanner scanner, LoanDao loanDao, BookDao bookDao) {
+    public LoanService(LoanDao loanDao, BookDao bookDao) {
+        this.loanDao = loanDao;
+        this.bookDao = bookDao;
+    }
 
+    public LoanService(Scanner scanner, LoanDao loanDao, BookDao bookDao) {
+        this.scanner = scanner;
         this.loanDao = loanDao;
         this.bookDao = bookDao;
     }
@@ -83,12 +89,12 @@ public class LoanService {
     }
 
 
-    public List<Loan> getLoansByUser(String borrower) {
+    /*public List<Loan> getLoansByUser(String borrower) {
         System.out.print("검색하려는 사용자 이름을 입력하세요: ");
         String borrower = scanner.nextLine();
 
         return loanDao.findLoansByUser(borrower);
-    }
+    }*/
 
     public void showLoansByUser() {
 

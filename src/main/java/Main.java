@@ -8,20 +8,21 @@ import service.LoanService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        int port = 8080;
-        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
-
-        BookDao bookDao = new SqliteBookDao();
-        LoanDao loanDao = new SqliteLoanDao();
-        LoanService loanService = new LoanService(loanDao, bookDao);
+//        BookDao bookDao = new SqliteBookDao();
+//        LoanDao loanDao = new SqliteLoanDao(bookDao);
+//        BookService bookService = new BookService(bookDao);
+//        LoanService loanService = new LoanService(loanDao, bookDao);
 
         try {
             DatabaseUtil.initializeDatabase();
@@ -47,6 +48,9 @@ public class Main {
         public void handle(HttpExchange exchange) throws IOException {
             String html = """
                     <html>
+                        <head>
+                          
+                        </head>
                         <body>
                           <h2>이름을 입력하세요</h2>
                           <form method="POST" action="/hello">
@@ -57,6 +61,8 @@ public class Main {
                     </html>
                     """;
 
+            //<meta charset="UTF-8">
+            exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
             exchange.sendResponseHeaders(200, html.getBytes().length);
             OutputStream os = exchange.getResponseBody();
             os.write(html.getBytes());
@@ -80,11 +86,24 @@ public class Main {
             String name = params.getOrDefault("name", "손님");
             String response = "<h1>안녕하세요, " + name + "님</h1>";
 
+            exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
             exchange.sendResponseHeaders(200, response.getBytes().length);
             OutputStream os = exchange.getResponseBody();
             os.write(response.getBytes());
             os.close();
         }
 
-
+        private Map<String, String> parseFormData(String data) throws UnsupportedEncodingException {
+            Map<String, String> map = new HashMap<>();
+            for (String pair : data.split("&")) {
+                String[] parts = pair.split("=");
+                if (parts.length == 2) {
+                    String key = URLDecoder.decode(parts[0], StandardCharsets.UTF_8);
+                    String value = URLDecoder.decode(parts[1], StandardCharsets.UTF_8);
+                    map.put(key, value);
+                }
+            }
+            return map;
+        }
+    }
 }
